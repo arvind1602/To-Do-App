@@ -3,13 +3,17 @@ const today = new Date();
 const formattedDate = today.toDateString();
 document.getElementById("date-now").textContent = formattedDate;
 
-// On submit
+// Load stored todos on page load
+window.addEventListener("DOMContentLoaded", () => {
+  const todos = JSON.parse(localStorage.getItem("todos")) || [];
+  todos.forEach(todo => renderTodo(todo));
+});
+
 const event_submit = document.querySelector("#event-submit");
 
 event_submit.addEventListener("click", (e) => {
   e.preventDefault();
 
-  // Input fields
   const event_type = document.querySelector("#event");
   const location = document.querySelector("#location");
   const event_date = document.querySelector("#event-date");
@@ -26,60 +30,76 @@ event_submit.addEventListener("click", (e) => {
     }
   });
 
-  // If valid, add list items
   if (execute) {
     // Generate unique ID
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     let id = "";
     for (let i = 0; i < 8; i++) {
-      id += chars[Math.floor(Math.random() * chars.length + 1)];
+      id += chars[Math.floor(Math.random() * chars.length)];
     }
 
-    // Create <li> for event name
-    const event_name = document.querySelector("#event-name");
-    const event_li = document.createElement("li");
-    event_li.innerText = event_type.value;
-    event_li.classList.add(id);
-    event_name.appendChild(event_li);
+    const todo = {
+      id,
+      name: event_type.value,
+      location: location.value,
+      date: event_date.value
+    };
 
-    // Create <li> for location
-    const location_ul = document.querySelector("#event-location");
-    const location_li = document.createElement("li");
-    location_li.innerText = location.value;
-    location_li.classList.add(id);
-    location_ul.appendChild(location_li);
+    // Save to localStorage
+    const todos = JSON.parse(localStorage.getItem("todos")) || [];
+    todos.push(todo);
+    localStorage.setItem("todos", JSON.stringify(todos));
 
-    // Create <li> for date
-    const date_ul = document.querySelector("#event-day");
-    const date_li = document.createElement("li");
-    date_li.innerText = event_date.value;
-    date_li.classList.add(id);
-    date_ul.appendChild(date_li);
+    // Render on screen
+    renderTodo(todo);
 
-    // Create <li> for remove button
-    const remove_ul = document.querySelector("#remove-btn");
-    const remove_li = document.createElement("li");
-    const remove_btn = document.createElement("button");
-    remove_btn.textContent = "Remove";
-    remove_btn.setAttribute("data-id", id);
-    remove_li.appendChild(remove_btn);
-    remove_ul.appendChild(remove_li);
-
-    // Clear input fields
-    // arr.forEach((input) => (input.value = ""));
+    // Clear inputs
+    arr.forEach((input) => input.value = "");
   }
 });
 
-// Remove button handler (event delegation)
+// Function to render a todo item to the page
+function renderTodo({ id, name, location, date }) {
+  const event_name = document.querySelector("#event-name");
+  const location_ul = document.querySelector("#event-location");
+  const date_ul = document.querySelector("#event-day");
+  const remove_ul = document.querySelector("#remove-btn");
+
+  const name_li = document.createElement("li");
+  name_li.innerText = name;
+  name_li.classList.add(id);
+  event_name.appendChild(name_li);
+
+  const location_li = document.createElement("li");
+  location_li.innerText = location;
+  location_li.classList.add(id);
+  location_ul.appendChild(location_li);
+
+  const date_li = document.createElement("li");
+  date_li.innerText = date;
+  date_li.classList.add(id);
+  date_ul.appendChild(date_li);
+
+  const remove_li = document.createElement("li");
+  const remove_btn = document.createElement("button");
+  remove_btn.textContent = "Remove";
+  remove_btn.setAttribute("data-id", id);
+  remove_li.appendChild(remove_btn);
+  remove_ul.appendChild(remove_li);
+}
+
+// Remove from both screen and localStorage
 document.getElementById("remove-btn").addEventListener("click", (e) => {
   if (e.target.tagName === "BUTTON") {
     const id = e.target.getAttribute("data-id");
 
-    // Remove all list items with this ID
-    const items = document.querySelectorAll(`.${id}`);
-    items.forEach((item) => item.remove());
-
-    // Also remove the remove button's <li>
+    // Remove from DOM
+    document.querySelectorAll(`.${id}`).forEach((item) => item.remove());
     e.target.parentElement.remove();
+
+    // Remove from localStorage
+    let todos = JSON.parse(localStorage.getItem("todos")) || [];
+    todos = todos.filter(todo => todo.id !== id);
+    localStorage.setItem("todos", JSON.stringify(todos));
   }
 });
