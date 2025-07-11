@@ -8,3 +8,4 @@
 - add location
 - add date 
 
+### better understanding on big screen
