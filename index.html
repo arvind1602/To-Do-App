@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do App</title>
+    <link
+      rel="icon"
+      href="https://www.shutterstock.com/image-vector/do-list-lettering-vector-pencil-600nw-1837137628.jpg"
+      type="image/png"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <nav>
+      <div id="logo">To-Do App</div>
+      <div class="about">
+        <ul id="about-list">
+          <li><button>day</button></li>
+          <li><button>week</button></li>
+          <li><button>month</button></li>
+        </ul>
+      </div>
+
+      <div id="date">
+        <p>date</p>
+        <p id="date-now">hello</p>
+      </div>
+    </nav>
+
+    <main>
+      <section id="first">
+        <h1>add event</h1>
+        <form action="">
+          <input id="event" type="text" placeholder="enter event" />
+          <input id="location" type="text" placeholder="location" />
+          <input id="event-date" type="date" placeholder="date" />
+          <button type="submit" id="event-submit">Add event</button>
+        </form>
+      </section>
+      <section id="second">
+        <div>
+          <h2>event type</h2>
+
+          <h2>location</h2>
+
+          <h2>Event date</h2>
+
+          <h2>remove</h2>
+        </div>
+        <div>
+          <ul id="event-name"></ul>
+          <ul id="event-location"></ul>
+          <ul id="event-day"></ul>
+          <ul id="remove-btn"></ul>
+        </div>
+      </section>
+    </main>
+    <script src="index.js"></script>
+  </body>
+</html>
